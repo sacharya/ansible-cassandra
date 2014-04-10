@@ -1,0 +1,17 @@
+---
+- name: Add repository into sources list
+  apt_repository: repo='deb http://www.apache.org/dist/cassandra/debian 20x main' state=present
+
+- name: Add source repository into sources list
+  apt_repository: repo='deb-src http://www.apache.org/dist/cassandra/debian 20x main' state=present
+
+- name: Add the apt signing key
+  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x4BD736A82B5C1B00 state=present 
+
+- name: Install Cassandra Package
+  apt: pkg=cassandra state=present update_cache=true
+
+- name: Install Cassandra.yaml configuration file
+  template: src=cassandra.yaml dest=/etc/cassandra/cassandra.yaml
+  notify: restart cassandra
+

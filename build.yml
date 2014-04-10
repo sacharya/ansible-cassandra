@@ -1,0 +1,22 @@
+---
+- name: install cassandra on seed node
+  hosts: cassandra[0] 
+  gather_facts: true
+  user: root
+  vars:
+      listen_address: '{{ hostvars[inventory_hostname]["ansible_" + network_interface].ipv4.address }}'
+      rpc_address: '{{ hostvars[inventory_hostname]["ansible_" + network_interface].ipv4.address }}'
+      seeds: '{{ hostvars[inventory_hostname]["ansible_" + network_interface].ipv4.address }}'
+  roles:
+  - {role: install-cassandra}
+
+- name: install cssandra on peers
+  hosts: cassandra:!cassandra[0]
+  gather_facts: true
+  user: root
+  vars:
+    listen_address: '{{ hostvars[inventory_hostname]["ansible_" + network_interface].ipv4.address }}'
+    rpc_address: '{{ hostvars[inventory_hostname]["ansible_" + network_interface].ipv4.address }}'
+    seeds: '{{ hostvars[groups["cassandra"][0]]["ansible_" + network_interface].ipv4.address }}'
+  roles:
+  - {role: install-cassandra}
