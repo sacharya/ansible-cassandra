@@ -7,3 +7,5 @@ cd ansible-cassandra
 
 ansible-playbook -i inventory/hosts build.yml $@ 2>&1
 
+
+ansible -i inventory/hosts cassandra -u root -m command -a "nodetool status"
